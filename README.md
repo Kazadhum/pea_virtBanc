@@ -44,3 +44,11 @@ Projeto Bancada Virtual
 -  Integrar suporte para medidores de consumo
 -  Display da temperatura do IOT na Dashboard
 -  Numa fase inicial, fazer a configuração dos sensores via um ficheiro de texto carregado para o Node-RED
+
+## Feedback Apresentação M3
+
+- Marcar uma reunião com o prof e com o David
+- Explorar soluções para o tamanho do ficheiro JSON
+  - Arredondar valores da pressão, abreviar palavras
+- Pré-alarmes
+
