@@ -1,0 +1,11 @@
+{
+    "name": "SensorB",
+    "enabled": "False",
+    "units": "milimetros",
+    "rangeMin":50,
+    "rangeMax": 300,
+    "alarmMin": 20,
+    "alarmMax": 270,
+    "alarmPreMin": 30,
+    "alarmPreMax": 260
+}

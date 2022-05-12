@@ -1,0 +1,10 @@
+{
+    "name": "Sensor_Pressao","enabled": "True",
+    "units": "bar",
+    "rangeMin":0,
+    "rangeMax": 10,
+    "alarmMin": 20,
+    "alarmMax": 270,
+    "alarmPreMin": 30,
+    "alarmPreMax": 260
+}
