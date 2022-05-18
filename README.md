@@ -52,3 +52,13 @@ Projeto Bancada Virtual
   - Arredondar valores da pressão, abreviar palavras
 - Pré-alarmes
 
+
+## Lista tarefas 18/05
+- Implementação RS232/RS485
+  - Rodrigo, Gil, Leonardo
+- Junção dos flows de leitura e configuração de sensores
+  - Rodrigo, Gil, Leonardo
+- Gráficos com tratamento de dados
+  - Diogo, Andrea
+- Algoritmos de pré-deteção de problemas
+  - Diogo, Andrea
