@@ -1,0 +1,10 @@
+{
+    "name": "Exemplo",
+    "units": "xxx",
+    "rangeMin": "0",
+    "rangeMax": 100,
+    "alarmMin": 1,
+    "alarmMax": 99,
+    "alarmPreMin": 5,
+    "alarmPreMax": 90
+}
