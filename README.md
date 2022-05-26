@@ -52,13 +52,8 @@ Projeto Bancada Virtual
   - Arredondar valores da pressão, abreviar palavras
 - Pré-alarmes
 
-
-## Lista tarefas 18/05
-- Implementação RS232/RS485
-  - Rodrigo, Gil, Leonardo
-- Junção dos flows de leitura e configuração de sensores
-  - Rodrigo, Gil, Leonardo
-- Gráficos com tratamento de dados
-  - Diogo, Andrea
-- Algoritmos de pré-deteção de problemas
-  - Diogo, Andrea
+## Feedback Reunião 25/05
+- Fazer ficheiro de configuração base para SDMs, para apenas ser necessário mudar alguns parâmetros
+  - Caso se pretenda usar novo hardware, seria necessário fazer uma nova config, mas isso é ok
+- Ver exemplos MODBUS
+- Investigar formas de transferência de ficheiro de resultados para uma pen USB de forma intuitiva
