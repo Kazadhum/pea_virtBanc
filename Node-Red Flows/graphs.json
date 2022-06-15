@@ -1,0 +1,1452 @@
+[
+    {
+        "id": "5a407f16ddca8169",
+        "type": "tab",
+        "label": "testes_ui_150622",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "064a2f86f2dcf49d",
+        "type": "file",
+        "z": "5a407f16ddca8169",
+        "name": "Write File",
+        "filename": "C:\\Users\\nina-\\Desktop\\teste.json",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "false",
+        "x": 1300,
+        "y": 220,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "17705ee6d84d2968",
+        "type": "json",
+        "z": "5a407f16ddca8169",
+        "name": "",
+        "property": "payload",
+        "action": "str",
+        "pretty": false,
+        "x": 1160,
+        "y": 220,
+        "wires": [
+            [
+                "064a2f86f2dcf49d"
+            ]
+        ]
+    },
+    {
+        "id": "b49d238b8f31bd63",
+        "type": "function",
+        "z": "5a407f16ddca8169",
+        "name": "",
+        "func": "var time=new Date().toISOString();\n\n//2022-06-15T08:57:22.968Z\n\nvar str1 = time.slice(8,10) + \"-\" + time.slice(5,7) + \"-\" + time.slice(2,4);\nvar str2 = time.slice(11,19);\n\nvar time_str = str1 + \" \" + str2;\n\nvar sensor_name=msg.payload.props.name;\npayload={\"t\":time_str,\"v\":msg.payload.value,\"s\":sensor_name};\nmsg.payload=payload\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 990,
+        "y": 220,
+        "wires": [
+            [
+                "17705ee6d84d2968"
+            ]
+        ]
+    },
+    {
+        "id": "d4bf506da29490df",
+        "type": "file in",
+        "z": "5a407f16ddca8169",
+        "name": "",
+        "filename": "C:\\Users\\nina-\\Desktop\\exemplo.json",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "allProps": false,
+        "x": 590,
+        "y": 40,
+        "wires": [
+            [
+                "eafc022fe4bee289"
+            ]
+        ]
+    },
+    {
+        "id": "eafc022fe4bee289",
+        "type": "json",
+        "z": "5a407f16ddca8169",
+        "name": "",
+        "property": "payload",
+        "action": "obj",
+        "pretty": false,
+        "x": 850,
+        "y": 40,
+        "wires": [
+            [
+                "2283756f6ec6ca44"
+            ]
+        ]
+    },
+    {
+        "id": "2283756f6ec6ca44",
+        "type": "join",
+        "z": "5a407f16ddca8169",
+        "name": "",
+        "mode": "custom",
+        "build": "object",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": false,
+        "timeout": "",
+        "count": "2",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 560,
+        "y": 160,
+        "wires": [
+            [
+                "53b1f4c626d6e6a3",
+                "e493c2b4338248d5",
+                "3e3252f29210b356",
+                "321b76eb9f6863bb",
+                "43eb30be70156f16"
+            ]
+        ]
+    },
+    {
+        "id": "e4d9f583809371a9",
+        "type": "change",
+        "z": "5a407f16ddca8169",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "value",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 370,
+        "y": 140,
+        "wires": [
+            [
+                "2283756f6ec6ca44"
+            ]
+        ]
+    },
+    {
+        "id": "53b1f4c626d6e6a3",
+        "type": "function",
+        "z": "5a407f16ddca8169",
+        "name": "",
+        "func": "var sensor = msg.payload.value; \n\nvar min=msg.payload.props.rangeMin;\nvar max=msg.payload.props.rangeMax;\n\nmsg.payload.value = sensor;\nmsg.payload.value = Math.round(msg.payload.value*100)/100;\nmsg.payload.props.name=msg.payload.props.name +\" - U0\";\n\nvar GlobalSensorUnits = msg.payload.props.units;\n\nglobal.set(\"SensorUnits\", GlobalSensorUnits);\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 780,
+        "y": 160,
+        "wires": [
+            [
+                "b49d238b8f31bd63",
+                "bdb5ec917eab2e84",
+                "309a71a9e2f99816",
+                "baea6c7b13760ad5",
+                "5ee8583be58694ca",
+                "dda093dfc0372b82",
+                "c03448bcae19d58b",
+                "16f5fca502b81081",
+                "fe1726dd831295c9"
+            ]
+        ]
+    },
+    {
+        "id": "bdb5ec917eab2e84",
+        "type": "function",
+        "z": "5a407f16ddca8169",
+        "name": "",
+        "func": "var min=msg.payload.props.rangeMin;\nvar max=msg.payload.props.rangeMax;\nvar data= msg.payload.value;\n\nmsg = {payload: msg.payload, ui_control:{min:min,max:max},topic:\"Soil\"};\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 990,
+        "y": 160,
+        "wires": [
+            [
+                "84954468c108db76"
+            ]
+        ]
+    },
+    {
+        "id": "ce65b19534aedcba",
+        "type": "inject",
+        "z": "5a407f16ddca8169",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "1",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 130,
+        "y": 40,
+        "wires": [
+            [
+                "f6197f60e44be02a",
+                "621d500e133e49bb"
+            ]
+        ]
+    },
+    {
+        "id": "309a71a9e2f99816",
+        "type": "function",
+        "z": "5a407f16ddca8169",
+        "name": "",
+        "func": "msg.payload = msg.payload.value;\nmsg.topic = \"value\";\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1000,
+        "y": 100,
+        "wires": [
+            [
+                "22bafd386af26789"
+            ]
+        ]
+    },
+    {
+        "id": "baea6c7b13760ad5",
+        "type": "function",
+        "z": "5a407f16ddca8169",
+        "name": "mean_mobile_calc",
+        "func": "// Variable declaration\nvar valueArray = context.get(\"valueArray\") || []; // Get previous array of values, if it exists\nvar tot = 0;\nvar valueCount = valueArray.length; //Length of the array\n\n// If the array has less than 10 values, add another one\nif (valueCount < 10){\n    valueArray[valueCount] = msg.payload.value;\n}\n// If the array has 10 values, replace the oldest one\nelse{\n    \n    for (i=0; i<9; i++){\n        valueArray[i] = valueArray[i+1];\n    }\n    \n    valueArray[9] = msg.payload.value;\n}\n\n//Save the array\ncontext.set(\"valueArray\", valueArray)\n\n//\nif (valueCount < 10){\n    for (i = 0; i < valueCount + 1; i++){\n        tot = tot + valueArray[i];\n    }\n    var mean = tot/(valueCount + 1);\n}\nelse{\n    for (i = 0; i < valueCount; i++){\n        tot = tot + valueArray[i];\n    }\n    var mean = tot/valueCount;    \n}\n\nmean = Math.round(mean*100)/100;\n\nmsg.payload = mean;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 770,
+        "y": 300,
+        "wires": [
+            [
+                "3bb810fc48db5e7f"
+            ]
+        ]
+    },
+    {
+        "id": "3bb810fc48db5e7f",
+        "type": "change",
+        "z": "5a407f16ddca8169",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "mean_mobile",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 970,
+        "y": 300,
+        "wires": [
+            [
+                "22bafd386af26789"
+            ]
+        ]
+    },
+    {
+        "id": "5ee8583be58694ca",
+        "type": "function",
+        "z": "5a407f16ddca8169",
+        "name": "max_calc",
+        "func": "// Variable declaration\nvar valueMax = context.get(\"valueMax\") || 0;\nvar units = global.get(\"SensorUnits\");\n\nif (valueMax == 0){\n    valueMax = msg.payload.value;\n}\nelse{\n    if (msg.payload.value > valueMax){\n        valueMax = msg.payload.value;\n    }\n}\n\n//Save the array\ncontext.set(\"valueMax\", valueMax);\n\nmsg.payload.max = valueMax;\nmsg.payload.units = units;\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 740,
+        "y": 480,
+        "wires": [
+            [
+                "a880911273f33dff"
+            ]
+        ]
+    },
+    {
+        "id": "dda093dfc0372b82",
+        "type": "function",
+        "z": "5a407f16ddca8169",
+        "name": "min_calc",
+        "func": "// Variable declaration\nvar valueMin = context.get(\"valueMin\") || 0;\nvar units = global.get(\"SensorUnits\");\n\nif (valueMin == 0){\n    valueMin = msg.payload.value;\n}\nelse{\n    if (msg.payload.value < valueMin){\n        valueMin = msg.payload.value;\n    }\n}\n\n//Save the array\ncontext.set(\"valueMin\", valueMin);\n\n\n\nmsg.payload.units = units;\nmsg.payload.min = valueMin;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 740,
+        "y": 420,
+        "wires": [
+            [
+                "3c880852a9cf3df9"
+            ]
+        ]
+    },
+    {
+        "id": "3c880852a9cf3df9",
+        "type": "change",
+        "z": "5a407f16ddca8169",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "min",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 970,
+        "y": 420,
+        "wires": [
+            [
+                "14516709a17fc16c"
+            ]
+        ]
+    },
+    {
+        "id": "a880911273f33dff",
+        "type": "change",
+        "z": "5a407f16ddca8169",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "max",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 970,
+        "y": 480,
+        "wires": [
+            [
+                "f01bf506c6f796fd"
+            ]
+        ]
+    },
+    {
+        "id": "621d500e133e49bb",
+        "type": "change",
+        "z": "5a407f16ddca8169",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "props",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 310,
+        "y": 40,
+        "wires": [
+            [
+                "d4bf506da29490df"
+            ]
+        ]
+    },
+    {
+        "id": "f6197f60e44be02a",
+        "type": "cpu",
+        "z": "5a407f16ddca8169",
+        "name": "",
+        "msgCore": false,
+        "msgOverall": true,
+        "msgArray": false,
+        "msgTemp": false,
+        "x": 190,
+        "y": 140,
+        "wires": [
+            [
+                "e4d9f583809371a9"
+            ]
+        ]
+    },
+    {
+        "id": "84954468c108db76",
+        "type": "ui_gauge",
+        "z": "5a407f16ddca8169",
+        "name": "",
+        "group": "49de8910.30c838",
+        "order": 1,
+        "width": 9,
+        "height": 7,
+        "gtype": "compass",
+        "title": "{{msg.payload.props.name}}",
+        "label": "{{msg.payload.props.units}}",
+        "format": "{{msg.payload.value}}",
+        "min": "0",
+        "max": "10",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "className": "",
+        "x": 1200,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "22bafd386af26789",
+        "type": "ui_chart",
+        "z": "5a407f16ddca8169",
+        "name": "",
+        "group": "49de8910.30c838",
+        "order": 5,
+        "width": 12,
+        "height": 6,
+        "label": "",
+        "chartType": "line",
+        "legend": "true",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": "10",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "1",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#ffa200",
+            "#ff0fdf",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 1210,
+        "y": 100,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "c03448bcae19d58b",
+        "type": "function",
+        "z": "5a407f16ddca8169",
+        "name": "slope_calc",
+        "func": "var previousValue = context.get(\"previousValue\") || 0;\nvar prevTime = context.get(\"previousTime\") || 0;\n\nvar units = global.get(\"SensorUnits\");\n\nvar actualTime = Date.now();\n\nif (prevTime != 0){\n    \nvar timeDiff = (actualTime - prevTime)/1000;\n\nvar delta = msg.payload.value - previousValue;\n\nvar slope = delta/timeDiff;\n\nslope = Math.round(slope*100)/100;\n\nmsg.payload.slope = slope;\n\n}\n\nelse{\n    msg.payload.slope = 0;\n}\n\ncontext.set(\"previousTime\", actualTime);\ncontext.set(\"previousValue\", msg.payload.value);\n\nmsg.payload.units = units;\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 750,
+        "y": 540,
+        "wires": [
+            [
+                "f6c0564dd704a61a"
+            ]
+        ]
+    },
+    {
+        "id": "f6c0564dd704a61a",
+        "type": "change",
+        "z": "5a407f16ddca8169",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "slope",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 970,
+        "y": 540,
+        "wires": [
+            [
+                "1d90983e72431266"
+            ]
+        ]
+    },
+    {
+        "id": "16f5fca502b81081",
+        "type": "function",
+        "z": "5a407f16ddca8169",
+        "name": "mean_calc",
+        "func": "// Variable declaration\nvar tot = context.get(\"tot\") || 0; \nvar valueCount = context.get(\"valueCount\") || 0;\n\nvalueCount = valueCount + 1;\n\ntot = tot + msg.payload.value;\n\nif (valueCount != 0){\n    var mean = tot/valueCount;\n}\nelse{\n    var mean = 0;\n}\n\nmean = Math.round(mean*100)/100;\nmsg.payload = mean;\n\ncontext.set(\"tot\", tot);\ncontext.set(\"valueCount\", valueCount);\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 750,
+        "y": 360,
+        "wires": [
+            [
+                "23b5d3e22f2ac046"
+            ]
+        ]
+    },
+    {
+        "id": "23b5d3e22f2ac046",
+        "type": "change",
+        "z": "5a407f16ddca8169",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "mean",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 970,
+        "y": 360,
+        "wires": [
+            [
+                "22bafd386af26789"
+            ]
+        ]
+    },
+    {
+        "id": "1d90983e72431266",
+        "type": "ui_text",
+        "z": "5a407f16ddca8169",
+        "group": "49de8910.30c838",
+        "order": 12,
+        "width": 4,
+        "height": 1,
+        "name": "",
+        "label": "Slope",
+        "format": "{{msg.payload.slope}} {{msg.payload.units}}/s",
+        "layout": "row-spread",
+        "className": "",
+        "x": 1150,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "14516709a17fc16c",
+        "type": "ui_text",
+        "z": "5a407f16ddca8169",
+        "group": "49de8910.30c838",
+        "order": 8,
+        "width": 4,
+        "height": 1,
+        "name": "",
+        "label": "Minimum",
+        "format": "{{msg.payload.min}} {{msg.payload.units}}",
+        "layout": "row-spread",
+        "className": "",
+        "x": 1160,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "f01bf506c6f796fd",
+        "type": "ui_text",
+        "z": "5a407f16ddca8169",
+        "group": "49de8910.30c838",
+        "order": 3,
+        "width": 4,
+        "height": 1,
+        "name": "",
+        "label": "Maximum",
+        "format": "{{msg.payload.max}} {{msg.payload.units}}",
+        "layout": "row-spread",
+        "className": "",
+        "x": 1160,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "fe1726dd831295c9",
+        "type": "ui_text",
+        "z": "5a407f16ddca8169",
+        "group": "49de8910.30c838",
+        "order": 2,
+        "width": 12,
+        "height": 1,
+        "name": "Chart Title",
+        "label": "",
+        "format": "{{msg.payload.props.name}} ({{msg.payload.props.units}})",
+        "layout": "row-center",
+        "className": "",
+        "x": 1010,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "0507531f52e9bbb3",
+        "type": "ui_toast",
+        "z": "5a407f16ddca8169",
+        "position": "top right",
+        "displayTime": "5",
+        "highlight": "Red",
+        "sendall": true,
+        "outputs": 0,
+        "ok": "OK",
+        "cancel": "Cancel",
+        "raw": true,
+        "className": "",
+        "topic": "U0 Alarm",
+        "name": "Alarm Max",
+        "x": 1490,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "b45370d9c00e4ff6",
+        "type": "switch",
+        "z": "5a407f16ddca8169",
+        "name": "",
+        "property": "payload.alarm_flag",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "1",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "0",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 950,
+        "y": 600,
+        "wires": [
+            [
+                "e4b9c46c5eb9621e",
+                "b104e476f8126821",
+                "40fd1864b9846f25"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "e493c2b4338248d5",
+        "type": "function",
+        "z": "5a407f16ddca8169",
+        "name": "alarm_max_detect",
+        "func": "var alarm_flag;\n\nif (msg.payload.value > msg.payload.props.alarmMax){\n    \n    alarm_flag = 1;\n\n}\n\nelse{\n    \n    alarm_flag = 0;\n    \n}\n\n\n\n\n\nmsg.payload.alarm_flag = alarm_flag;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 770,
+        "y": 600,
+        "wires": [
+            [
+                "b45370d9c00e4ff6"
+            ]
+        ]
+    },
+    {
+        "id": "e7f4d1af570c140a",
+        "type": "ui_template",
+        "z": "5a407f16ddca8169",
+        "group": "49de8910.30c838",
+        "name": "",
+        "order": 13,
+        "width": 0,
+        "height": 0,
+        "format": "<div ng-bind-html=\"msg.payload\"></div>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "global",
+        "className": "",
+        "x": 1340,
+        "y": 580,
+        "wires": [
+            [
+                "0507531f52e9bbb3"
+            ]
+        ]
+    },
+    {
+        "id": "e4b9c46c5eb9621e",
+        "type": "function",
+        "z": "5a407f16ddca8169",
+        "name": "alarm_max_translate",
+        "func": "\nmsg.payload = \"The value read exceeds the maximum value!\";\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1160,
+        "y": 580,
+        "wires": [
+            [
+                "e7f4d1af570c140a"
+            ]
+        ]
+    },
+    {
+        "id": "947784f8036b3dce",
+        "type": "ui_audio",
+        "z": "5a407f16ddca8169",
+        "name": "",
+        "group": "49de8910.30c838",
+        "voice": "Microsoft Jenny Online (Natural) - English (United States)",
+        "always": true,
+        "x": 1340,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "b104e476f8126821",
+        "type": "function",
+        "z": "5a407f16ddca8169",
+        "name": "warning_tts_message",
+        "func": "\nmsg.payload = \"Warning!\";\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1160,
+        "y": 640,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "058177250bbb4fc9",
+        "type": "ui_toast",
+        "z": "5a407f16ddca8169",
+        "position": "top right",
+        "displayTime": "5",
+        "highlight": "Red",
+        "sendall": true,
+        "outputs": 0,
+        "ok": "OK",
+        "cancel": "Cancel",
+        "raw": true,
+        "className": "",
+        "topic": "U0 Alarm",
+        "name": "Alarm Min",
+        "x": 1480,
+        "y": 780,
+        "wires": []
+    },
+    {
+        "id": "7b4e9686b57eed25",
+        "type": "switch",
+        "z": "5a407f16ddca8169",
+        "name": "",
+        "property": "payload.alarm_flag",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "1",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "0",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 950,
+        "y": 800,
+        "wires": [
+            [
+                "72a26cc56ae39a1f",
+                "30aa9ae400f3872d",
+                "581a181a3aa19178"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "3e3252f29210b356",
+        "type": "function",
+        "z": "5a407f16ddca8169",
+        "name": "alarm_min_detect",
+        "func": "var alarm_flag;\n\nif (msg.payload.value < msg.payload.props.alarmMin){\n    \n    alarm_flag = 1;\n\n}\n\nelse{\n    \n    alarm_flag = 0;\n    \n}\n\n\nmsg.payload.alarm_flag = alarm_flag;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 770,
+        "y": 800,
+        "wires": [
+            [
+                "7b4e9686b57eed25"
+            ]
+        ]
+    },
+    {
+        "id": "6b2e777cb33627ef",
+        "type": "ui_template",
+        "z": "5a407f16ddca8169",
+        "group": "49de8910.30c838",
+        "name": "",
+        "order": 13,
+        "width": 0,
+        "height": 0,
+        "format": "<div ng-bind-html=\"msg.payload\"></div>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "global",
+        "className": "",
+        "x": 1340,
+        "y": 780,
+        "wires": [
+            [
+                "058177250bbb4fc9"
+            ]
+        ]
+    },
+    {
+        "id": "72a26cc56ae39a1f",
+        "type": "function",
+        "z": "5a407f16ddca8169",
+        "name": "alarm_min_translate",
+        "func": "msg.payload = \"The value read is lower than the minimum value!\";\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1160,
+        "y": 780,
+        "wires": [
+            [
+                "6b2e777cb33627ef"
+            ]
+        ]
+    },
+    {
+        "id": "38fd23df3baa23e9",
+        "type": "ui_audio",
+        "z": "5a407f16ddca8169",
+        "name": "",
+        "group": "49de8910.30c838",
+        "voice": "Microsoft George - English (United Kingdom)",
+        "always": true,
+        "x": 1340,
+        "y": 840,
+        "wires": []
+    },
+    {
+        "id": "30aa9ae400f3872d",
+        "type": "function",
+        "z": "5a407f16ddca8169",
+        "name": "warning_tts_message",
+        "func": "\nmsg.payload = \"Warning!\";\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1160,
+        "y": 840,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "c7c5d467a8438783",
+        "type": "ui_toast",
+        "z": "5a407f16ddca8169",
+        "position": "top right",
+        "displayTime": "5",
+        "highlight": "Orange",
+        "sendall": true,
+        "outputs": 0,
+        "ok": "OK",
+        "cancel": "Cancel",
+        "raw": true,
+        "className": "",
+        "topic": "U0 Alarm",
+        "name": "PreAlarm Max",
+        "x": 1520,
+        "y": 960,
+        "wires": []
+    },
+    {
+        "id": "efc25341fe12451d",
+        "type": "switch",
+        "z": "5a407f16ddca8169",
+        "name": "",
+        "property": "payload.alarm_flag",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "1",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "0",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 950,
+        "y": 980,
+        "wires": [
+            [
+                "73bb02b27290ca35",
+                "982f2985a451aab2",
+                "56302a82ee7788d5"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "321b76eb9f6863bb",
+        "type": "function",
+        "z": "5a407f16ddca8169",
+        "name": "prealarm_max_detect",
+        "func": "var alarm_flag;\n\nif (msg.payload.value > msg.payload.props.alarmPreMax & msg.payload.value < msg.payload.props.alarmMax){\n    \n    alarm_flag = 1;\n\n}\n\nelse{\n    \n    alarm_flag = 0;\n    \n}\n\n\nmsg.payload.alarm_flag = alarm_flag;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 780,
+        "y": 980,
+        "wires": [
+            [
+                "efc25341fe12451d"
+            ]
+        ]
+    },
+    {
+        "id": "806b99e6e6f932de",
+        "type": "ui_template",
+        "z": "5a407f16ddca8169",
+        "group": "49de8910.30c838",
+        "name": "",
+        "order": 13,
+        "width": 0,
+        "height": 0,
+        "format": "<div ng-bind-html=\"msg.payload\"></div>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "global",
+        "className": "",
+        "x": 1360,
+        "y": 960,
+        "wires": [
+            [
+                "c7c5d467a8438783"
+            ]
+        ]
+    },
+    {
+        "id": "73bb02b27290ca35",
+        "type": "function",
+        "z": "5a407f16ddca8169",
+        "name": "prealarm_max_translate",
+        "func": "msg.payload = \"The value read is high!\";\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1170,
+        "y": 960,
+        "wires": [
+            [
+                "806b99e6e6f932de"
+            ]
+        ]
+    },
+    {
+        "id": "56b9e7fd1e51bbb1",
+        "type": "ui_audio",
+        "z": "5a407f16ddca8169",
+        "name": "",
+        "group": "49de8910.30c838",
+        "voice": "Microsoft George - English (United Kingdom)",
+        "always": true,
+        "x": 1340,
+        "y": 1020,
+        "wires": []
+    },
+    {
+        "id": "982f2985a451aab2",
+        "type": "function",
+        "z": "5a407f16ddca8169",
+        "name": "warning_tts_message",
+        "func": "\nmsg.payload = \"Warning!\";\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1160,
+        "y": 1020,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "29e4f56818cd9d97",
+        "type": "ui_toast",
+        "z": "5a407f16ddca8169",
+        "position": "top right",
+        "displayTime": "5",
+        "highlight": "Orange",
+        "sendall": true,
+        "outputs": 0,
+        "ok": "OK",
+        "cancel": "Cancel",
+        "raw": true,
+        "className": "",
+        "topic": "U0 Alarm",
+        "name": "PreAlarm Min",
+        "x": 1520,
+        "y": 1160,
+        "wires": []
+    },
+    {
+        "id": "b59ce843ea9fa234",
+        "type": "switch",
+        "z": "5a407f16ddca8169",
+        "name": "",
+        "property": "payload.alarm_flag",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "1",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "0",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 950,
+        "y": 1180,
+        "wires": [
+            [
+                "9bd2dc943d8d70f6",
+                "fbb710abad824683",
+                "719a815591fd12ab"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "43eb30be70156f16",
+        "type": "function",
+        "z": "5a407f16ddca8169",
+        "name": "prealarm_min_detect",
+        "func": "var alarm_flag;\n\nif (msg.payload.value < msg.payload.props.alarmPreMin & msg.payload.value > msg.payload.props.alarmMin){\n    \n    alarm_flag = 1;\n\n}\n\nelse{\n    \n    alarm_flag = 0;\n    \n}\n\n\nmsg.payload.alarm_flag = alarm_flag;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 780,
+        "y": 1180,
+        "wires": [
+            [
+                "b59ce843ea9fa234"
+            ]
+        ]
+    },
+    {
+        "id": "3d44ebf42fccaeb5",
+        "type": "ui_template",
+        "z": "5a407f16ddca8169",
+        "group": "49de8910.30c838",
+        "name": "",
+        "order": 13,
+        "width": 0,
+        "height": 0,
+        "format": "<div ng-bind-html=\"msg.payload\"></div>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "global",
+        "className": "",
+        "x": 1360,
+        "y": 1160,
+        "wires": [
+            [
+                "29e4f56818cd9d97"
+            ]
+        ]
+    },
+    {
+        "id": "9bd2dc943d8d70f6",
+        "type": "function",
+        "z": "5a407f16ddca8169",
+        "name": "prealarm_min_translate",
+        "func": "msg.payload = \"The value read is low!\";\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1170,
+        "y": 1160,
+        "wires": [
+            [
+                "3d44ebf42fccaeb5"
+            ]
+        ]
+    },
+    {
+        "id": "3eba214108be7e14",
+        "type": "ui_audio",
+        "z": "5a407f16ddca8169",
+        "name": "",
+        "group": "49de8910.30c838",
+        "voice": "Microsoft George - English (United Kingdom)",
+        "always": true,
+        "x": 1340,
+        "y": 1220,
+        "wires": []
+    },
+    {
+        "id": "fbb710abad824683",
+        "type": "function",
+        "z": "5a407f16ddca8169",
+        "name": "warning_tts_message",
+        "func": "\nmsg.payload = \"Warning!\";\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1160,
+        "y": 1220,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "40fd1864b9846f25",
+        "type": "function",
+        "z": "5a407f16ddca8169",
+        "name": "alarmArray",
+        "func": "var alarmArray = global.get(\"AlarmArray\") || [];\nvar count = alarmArray.length;\n\nvar time = new Date().toISOString();\n\nvar str1 = time.slice(8,10) + \"-\" + time.slice(5,7) + \"-\" + time.slice(2,4);\nvar str2 = time.slice(11,19);\n\nvar time_str = str1 + \" \" + str2;\n\nalarmArray[count] = {\n        \"Time\": time_str,\n        \"Sensor\": msg.payload.props.name,\n        \"Value Read\" : String(Math.round(msg.payload.value*100)/100) + \" \" + msg.payload.props.units,\n        \"Type\" : \"Alarm\",\n        \"Description\": \"Maximum\",\n    };\n\ncount = count + 1;\n\nglobal.set(\"AlarmArray\", alarmArray);\n\nmsg.payload = alarmArray;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1130,
+        "y": 700,
+        "wires": [
+            [
+                "ce752caa139d5496"
+            ]
+        ]
+    },
+    {
+        "id": "581a181a3aa19178",
+        "type": "function",
+        "z": "5a407f16ddca8169",
+        "name": "alarmArray",
+        "func": "var alarmArray = global.get(\"AlarmArray\") || [];\nvar count = alarmArray.length;\n\nvar time = new Date().toISOString();\n\nvar str1 = time.slice(8,10) + \"-\" + time.slice(5,7) + \"-\" + time.slice(2,4);\nvar str2 = time.slice(11,19);\n\nvar time_str = str1 + \" \" + str2;\n\nalarmArray[count] = {\n        \"Time\": time_str,\n        \"Sensor\": msg.payload.props.name,\n        \"Value Read\" : String(Math.round(msg.payload.value*100)/100) + \" \" + msg.payload.props.units,\n        \"Type\" : \"Alarm\",\n        \"Description\": \"Minimum\",\n    };\n\ncount = count + 1;\n\nglobal.set(\"AlarmArray\", alarmArray);\n\nmsg.payload = alarmArray;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1130,
+        "y": 900,
+        "wires": [
+            [
+                "ce752caa139d5496"
+            ]
+        ]
+    },
+    {
+        "id": "56302a82ee7788d5",
+        "type": "function",
+        "z": "5a407f16ddca8169",
+        "name": "alarmArray",
+        "func": "var alarmArray = global.get(\"AlarmArray\") || [];\nvar count = alarmArray.length;\n\nvar time = new Date().toISOString();\n\nvar str1 = time.slice(8,10) + \"-\" + time.slice(5,7) + \"-\" + time.slice(2,4);\nvar str2 = time.slice(11,19);\n\nvar time_str = str1 + \" \" + str2;\n\nalarmArray[count] = {\n        \"Time\": time_str,\n        \"Sensor\": msg.payload.props.name,\n        \"Value Read\" : String(Math.round(msg.payload.value*100)/100) + \" \" + msg.payload.props.units,\n        \"Type\" : \"Warning\",\n        \"Description\":\"Pre Maximum\",\n    };\n\ncount = count + 1;\n\nglobal.set(\"AlarmArray\", alarmArray);\n\nmsg.payload = alarmArray;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1130,
+        "y": 1080,
+        "wires": [
+            [
+                "ce752caa139d5496"
+            ]
+        ]
+    },
+    {
+        "id": "719a815591fd12ab",
+        "type": "function",
+        "z": "5a407f16ddca8169",
+        "name": "alarmArray",
+        "func": "var alarmArray = global.get(\"AlarmArray\") || [];\nvar count = alarmArray.length;\n\nvar time = new Date().toISOString();\n\nvar str1 = time.slice(8,10) + \"-\" + time.slice(5,7) + \"-\" + time.slice(2,4);\nvar str2 = time.slice(11,19);\n\nvar time_str = str1 + \" \" + str2;\n\nalarmArray[count] = {\n        \"Time\": time_str,\n        \"Sensor\": msg.payload.props.name,\n        \"Value Read\" : String(Math.round(msg.payload.value*100)/100) + \" \" + msg.payload.props.units,\n        \"Type\" : \"Warning\",\n        \"Description\": \"Pre Minimum\",\n    };\n\ncount = count + 1;\n\nglobal.set(\"AlarmArray\", alarmArray);\n\nmsg.payload = alarmArray;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1130,
+        "y": 1280,
+        "wires": [
+            [
+                "ce752caa139d5496"
+            ]
+        ]
+    },
+    {
+        "id": "0706b999923fd2f8",
+        "type": "ui_table",
+        "z": "5a407f16ddca8169",
+        "group": "1459bd6e234fc32b",
+        "name": "",
+        "order": 1,
+        "width": 27,
+        "height": 11,
+        "columns": [],
+        "outputs": 0,
+        "cts": false,
+        "x": 1910,
+        "y": 920,
+        "wires": []
+    },
+    {
+        "id": "ce752caa139d5496",
+        "type": "change",
+        "z": "5a407f16ddca8169",
+        "name": "ui_control",
+        "rules": [
+            {
+                "t": "set",
+                "p": "ui_control",
+                "pt": "msg",
+                "to": "{\"tabulator\":{\"columns\":[{\"title\":\"Time\",\"field\":\"Time\",\"align\":\"center\"},{\"title\":\"Sensor\",\"field\":\"Sensor\",\"align\":\"center\"},{\"formatterParams\":{\"target\":\"_blank\"},\"title\":\"Type\",\"field\":\"Type\",\"align\":\"center\",\"color\":\"ff0000\",\"formatter\":\"function(cell, formatterParams, onRendered) {var status = cell.getValue(); if(status == 'Alarm') {cell.getElement().style.backgroundColor=\\\"#cc0000\\\";}else if(status == 'Minimum') {cell.getElement().style.backgroundColor=\\\"#cc0000\\\";}else{cell.getElement().style.backgroundColor=\\\"#cc7a00\\\";} return status;}\"},{\"title\":\"Description\",\"field\":\"Description\",\"align\":\"center\"},{\"title\":\"Value Read\",\"field\":\"Value Read\",\"align\":\"center\"}],\"layout\":\"fitColumns\",\"movableColumns\":true,\"groupBy\":\"\"}}",
+                "tot": "json"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1760,
+        "y": 920,
+        "wires": [
+            [
+                "0706b999923fd2f8"
+            ]
+        ]
+    },
+    {
+        "id": "1bc25ec1e3e5872d",
+        "type": "ui_spacer",
+        "z": "5a407f16ddca8169",
+        "name": "spacer",
+        "group": "49de8910.30c838",
+        "order": 4,
+        "width": 4,
+        "height": 1
+    },
+    {
+        "id": "67d91669c25ad770",
+        "type": "ui_spacer",
+        "z": "5a407f16ddca8169",
+        "name": "spacer",
+        "group": "49de8910.30c838",
+        "order": 6,
+        "width": 8,
+        "height": 1
+    },
+    {
+        "id": "bd8615619d56e35b",
+        "type": "ui_spacer",
+        "z": "5a407f16ddca8169",
+        "name": "spacer",
+        "group": "49de8910.30c838",
+        "order": 7,
+        "width": 8,
+        "height": 1
+    },
+    {
+        "id": "b15ab4440ad29dc4",
+        "type": "ui_spacer",
+        "z": "5a407f16ddca8169",
+        "name": "spacer",
+        "group": "49de8910.30c838",
+        "order": 9,
+        "width": 4,
+        "height": 1
+    },
+    {
+        "id": "408b63b49d86eaee",
+        "type": "ui_spacer",
+        "z": "5a407f16ddca8169",
+        "name": "spacer",
+        "group": "49de8910.30c838",
+        "order": 10,
+        "width": 8,
+        "height": 1
+    },
+    {
+        "id": "a75e4b23c37fa767",
+        "type": "ui_spacer",
+        "z": "5a407f16ddca8169",
+        "name": "spacer",
+        "group": "49de8910.30c838",
+        "order": 11,
+        "width": 8,
+        "height": 1
+    },
+    {
+        "id": "7c18a875065e73a2",
+        "type": "ui_spacer",
+        "z": "5a407f16ddca8169",
+        "name": "spacer",
+        "group": "49de8910.30c838",
+        "order": 13,
+        "width": 4,
+        "height": 1
+    },
+    {
+        "id": "49de8910.30c838",
+        "type": "ui_group",
+        "name": "Default",
+        "tab": "99139d81.bd79b",
+        "order": 1,
+        "disp": true,
+        "width": "30",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "1459bd6e234fc32b",
+        "type": "ui_group",
+        "name": "",
+        "tab": "c78c81f7f3136535",
+        "order": 1,
+        "disp": true,
+        "width": 27,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "99139d81.bd79b",
+        "type": "ui_tab",
+        "name": "Home",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "c78c81f7f3136535",
+        "type": "ui_tab",
+        "name": "Alarm History",
+        "icon": "dashboard",
+        "order": 2,
+        "disabled": false,
+        "hidden": false
+    }
+]
